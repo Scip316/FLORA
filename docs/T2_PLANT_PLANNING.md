@@ -1,10 +1,10 @@
-# EDEN Cultivate — Plant Planning
+# FLORA Cultivate — Crop Rotation Planning
 
-This folder covers **Tab 2 of Project EDEN**, intended for farmers and growers. Users describe their farm, crop history, desired crops and available resources to receive a plan for the next three growing cycles, including suitable fertilisers and a comparison of feasible approaches.
+This specification covers **Tab 2 of Project FLORA**, intended for farmers and growers. Users describe their farm, crop history, desired crops and available resources to receive a plan for the next three growing cycles, including suitable fertilisers and a comparison of feasible approaches.
 
-This workstream is planned for a later stage. [Food Assessment](../T1_Food_Assessment/README.md) is the initial priority. This README describes intended behaviour, not a working optimiser or validated agronomic recommendations. See the [overall project plan](../PROJECT_EDEN.md) for shared scope and research phases.
+This workstream is planned for a later stage. [Food Assessment](T1_FOOD_ASSESSMENT.md) is the initial priority. This README describes intended behaviour, not a working optimiser or validated agronomic recommendations. See the [overall project plan](PROJECT_FLORA.md) for shared scope and research phases.
 
-## Purpose and intended experience
+## 1 Purpose and intended experience
 
 The central question is: **What should I grow over the next three cycles, and how can I meet the crops' needs using suitable resources at an acceptable cost?**
 
@@ -12,7 +12,7 @@ A farmer enters farm conditions, the last three crops, desired or excluded crops
 
 The existing project direction prioritises hydroponic crop sequencing when this workstream begins. Soil-based crop rotation remains a potential extension requiring its own fertility, disease and rotation rules.
 
-## Planned inputs
+## 2 Planned inputs
 
 | Input group | Examples | Intended use |
 |---|---|---|
@@ -29,15 +29,21 @@ The existing project direction prioritises hydroponic crop sequencing when this 
 
 The initial farm inputs are the last three crops, area or capacity, geographical region, temperature and seasons. Additional calculations require their relevant inputs. Missing required data must be reported rather than silently replaced with invented values.
 
-## Planning and optimisation behaviour
+## 3 Planning and optimisation behaviour
 
-### Feasibility before ranking
+### 3.1 Terminal-first delivery
+
+Implement this task as Python code in `T2_Pipeline/`, using an Excel input template under `data/`. Start with a terminal entry point that validates farm inputs, uses applicable T1 findings, generates supported three-cycle plans and writes results. Define the Excel columns and command when the first supported planning scope is confirmed.
+
+Reuse suitable functions from `code_template/`; keep T2-specific planning logic in `T2_Pipeline/`. Place representative inputs and expected results in `test_cases/`. Build the web interface only after both terminal pipelines work.
+
+### 3.2 Feasibility before ranking
 
 Candidate plans must satisfy applicable crop, climate, equipment, capacity and agronomic constraints. Respect a budget as a hard constraint when the farmer specifies it that way. Cost savings must not override required compatibility or safety conditions.
 
 If no plan satisfies the constraints, return the conflicting requirements and explain which inputs or restrictions need reconsideration. Do not silently remove a requested crop or relax a constraint.
 
-### Objectives and alternatives
+### 3.3 Objectives and alternatives
 
 - **Cost:** Compare purchases and supported operating costs across three cycles.
 - **Inventory reuse:** Prefer compatible use of existing stock where this meets crop requirements.
@@ -47,7 +53,7 @@ If no plan satisfies the constraints, return the conflicting requirements and ex
 
 These are candidate objectives, not promises that every mode will be available initially. Describe a result as optimal only within its documented model, constraints, data and solver result.
 
-## Fertiliser selection and reuse
+## 4 Fertiliser selection and reuse
 
 The application should identify products that meet crop requirements and evaluate how they can be used across the planned sequence.
 
@@ -59,7 +65,7 @@ The application should identify products that meet crop requirements and evaluat
 
 Do not treat unused fertiliser stock and used nutrient solution as interchangeable resources. Electrical conductivity alone must not be used to invent individual nutrient concentrations. Account for losses, replenishment and carryover only where measurements and an appropriate model support them.
 
-## Farming-method distinctions
+## 5 Farming-method distinctions
 
 For hydroponics, research system compatibility, root-zone conditions, nutrient management, water quality, sanitation and changeover requirements. Generate sequences using those constraints rather than automatically importing soil rotation rules.
 
@@ -67,9 +73,9 @@ For a later soil-based extension, research soil fertility, nutrient depletion an
 
 Research may compare conventional and organic practices, soil types, greenhouse production, vertical farming, aquaponics and aeroponics. Support in the optimiser depends on validated method-specific data and rules; researching a method does not mean the application already supports it.
 
-## Data and shared knowledge
+## 6 Data and shared knowledge
 
-Reuse the shared EDEN Core plant, product, substance, interaction and evidence records also needed by Food Assessment. Keep farm inventory and planning scenarios separate from reference knowledge.
+Reuse the shared FLORA Core plant, product, substance, interaction and evidence records also needed by Food Assessment. Keep farm inventory and planning scenarios separate from reference knowledge.
 
 Planned planning-specific records include:
 
@@ -82,7 +88,7 @@ Planned planning-specific records include:
 
 All reference records need source metadata, units, coverage and limitations. A shared interaction record must state whether it concerns direct mixing, nutrient availability, plant uptake, environmental effects or consumer exposure.
 
-## Planned workflow
+## 7 Planned workflow
 
 1. Validate farm inputs, product identities, quantities and units.
 2. Identify crops suitable for the environment, method and farmer's preferences.
@@ -93,7 +99,7 @@ All reference records need source metadata, units, coverage and limitations. A s
 7. Estimate costs and other supported outcomes using explicit assumptions.
 8. Rank alternatives against the selected objective and explain trade-offs and uncertainty.
 
-## Expected output
+## 8 Expected output
 
 - A three-cycle schedule with crop choices, planting and harvest windows and estimated durations.
 - Fertiliser recommendations and the basis for their selection.
@@ -105,23 +111,17 @@ All reference records need source metadata, units, coverage and limitations. A s
 
 For example, a farmer may want to grow a desired crop while using fertiliser left from an earlier cycle. The system should compare whether that stock can meet the proposed crops' requirements, what supplementation would be needed and how the total cost compares with a defined alternative. This is intended behaviour, not a claim that reuse always saves money.
 
-## Relationship to Food Assessment
+## 9 Relationship to Food Assessment
 
-Plant Planning may use supported findings from EDEN Vitality to evaluate the potential quality or safety implications of candidate cultivation scenarios. Planned product use must remain distinct from measured residues or consumer exposure. Public food assessment must also remain usable independently of this planning tab.
+Plant Planning uses supported comparisons from FLORA Vitality to influence crop, fertiliser and other farming choices. T1 evaluates whether alternatives can achieve the same farming outcome with lower documented risks to human health and acceptable trade-offs. T2 applies those findings only to the crops, conditions and uses they support, alongside agronomic constraints, availability, costs and the farmer's objective.
 
-## Research and development sequence
+Retain T1's evidence and uncertainty in the plan explanation. Missing human-health evidence must remain unknown and must not be rewarded as a safer choice. Planned product use must remain distinct from measured residues or consumer exposure. Public food assessment must also remain usable independently of this planning tab.
 
-1. Review actual farm planning workflows, existing scheduling software and scientific models.
-2. Confirm the first supported hydroponic system, crop set, region and objective from available evidence.
-3. Gather crop requirements, compatibility rules, inventory information and cost data.
-4. Conduct EDA where needed to examine coverage, missingness, unit consistency and variability.
-5. Build the simplest feasible three-cycle planning model before expanding objectives.
-6. Validate constraints, inventory balances and comparisons against suitable records or worked examples.
-7. Build the farmer-facing tab after the underlying planning behaviour is supportable.
+## 10 Implementation constraints
 
 The optimisation and application libraries listed in the overall plan remain candidates. Select tools based on the validated problem and integration needs; machine learning is not a prerequisite.
 
-## Initial release criteria
+## 11 Initial release criteria
 
 - Each recommended crop and sequence is supported for the declared method and conditions.
 - Inventory quantities, nutrient units, area and time calculations remain consistent.
@@ -129,9 +129,3 @@ The optimisation and application libraries listed in the overall plan remain can
 - Cost comparisons use a stated baseline, currency, dates and assumptions.
 - Unmeasured nutrient carryover and unsupported reuse are not invented.
 - Users can understand why a plan was selected and where uncertainty affects it.
-
-## Current status and next step
-
-**Status:** Planned later-stage workstream. No optimiser, validated crop plans or confirmed savings are implemented by this documentation.
-
-**Next step:** Preserve these requirements while prioritising Food Assessment. When this workstream begins, confirm a small supported farming scenario and research existing solutions before developing the planning engine.
